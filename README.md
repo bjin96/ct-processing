@@ -2,7 +2,8 @@
 
 A pipeline for preprocessing CT head image series. The pipeline was developed to extract regions of interest around
 major intracranial arteries for subsequent image analysis. It should also work for extraction of different regions of
-interest, provided the appropriate templates are available.
+interest, provided the appropriate templates are available. As described in our paper
+[Pre-processing and Quality Control of Large Clinical CT Head Datasets for Intracranial Arterial Calcification Segmentation](https://doi.org/10.1007/978-3-031-73748-0_8).
 
 The pipeline includes (but is not limited to):
 - DICOM to NIfTI conversion
