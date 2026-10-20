@@ -1,4 +1,4 @@
-click
+click==8.5.0
 nibabel==5.2.0
 nilearn==0.10.2
 scikit-image==0.26.0
@@ -7,3 +7,4 @@ numpy>=1.26.3
 pydicom>=2.4.4
 matplotlib>=3.10.8
 python-gdcm>=3.2.2
+SimpleITK>=2.5.6
