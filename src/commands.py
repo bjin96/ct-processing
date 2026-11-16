@@ -3,7 +3,7 @@ from typing import List, Tuple
 
 import click
 
-from src.create_nnunet_dataset import create_nnunet_from_preprocessed
+from src.create_nnunet_dataset import create_ica_roi_dataset
 from src.region_of_interest_definition import RegionOfInterest
 from src.completeness_group_similarity import plot_all_group_similarities
 from src.co_registration import run_register_to_template, run_invert_registration_matrices
@@ -303,7 +303,7 @@ def create_dataset_json(
 @click.option('--dataset_json', required=True, type=click.Path(path_type=Path))
 @click.option('--nnunet_dataset_path', required=True, type=click.Path(path_type=Path))
 @click.option('--nnunet_mapping_path', required=True, type=click.Path(path_type=Path))
-def create_nnunet_dataset(
+def create_nnunet_dataset_from_preprocessed(
         dataset_json: Path,
         nnunet_dataset_path: Path,
         nnunet_mapping_path: Path,
@@ -315,3 +315,9 @@ def create_nnunet_dataset(
         from_nnunet_mapping=nnunet_mapping_path / 'from_nnunet_mapping.json',
         to_nnunet_mapping=nnunet_mapping_path / 'to_nnunet_mapping.json',
     )
+
+
+@click.command()
+def create_nnunet_dataset():
+    create_ica_roi_dataset()
+

@@ -8,3 +8,4 @@ pydicom>=2.4.4
 matplotlib>=3.10.8
 python-gdcm>=3.2.2
 SimpleITK>=2.5.6
+

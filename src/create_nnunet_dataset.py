@@ -3,6 +3,7 @@ import shutil
 from pathlib import Path
 from typing import Dict, List
 
+from src.ct_kernel_harmonization import harmonize_kernel_ct_scan
 from src.create_region_of_interest import create_region_of_interest, create_annotation_region_of_interest, \
     run_function_for_list
 from src.ct_windowing import DEFAULT_CT_RANGE, window_ct_scan
@@ -54,11 +55,11 @@ def _create_ica_roi_dataset(
         original_image_series_path = Path(base_path) / case['image']
         original_annotation_path = Path(base_path) / case['mask']
 
-        roi_image_series_path = Path(str(original_image_series_path).replace('.nii.gz', roi_image_suffix))
+#        roi_image_series_path = Path(str(original_image_series_path).replace('.nii.gz', roi_image_suffix))
 
-        if not roi_image_series_path.exists():
-            print(f'{roi_image_series_path} does not exist')
-            continue
+#        if not roi_image_series_path.exists():
+#            print(f'{roi_image_series_path} does not exist')
+#            continue
 
         # The second id is always 000, because CT only has one channel. Could potentially give different windows.
         # Attention: We are now giving a different window.
@@ -71,24 +72,37 @@ def _create_ica_roi_dataset(
         nnunet_windowed_image_path = nnunet_dataset_images_path / nnunet_windowed_image_name
         nnunet_label_path = nnunet_dataset_labels_path / nnunet_label_name
 
+        smoothed_image_series_path = Path(str(original_image_series_path).replace('.nii.gz', '_smoothed.nii.gz'))
+        harmonize_kernel_ct_scan(
+            ct_scan_path=original_image_series_path,
+            smoothed_output_path=smoothed_image_series_path
+        )
+
         # Create file map to join nnunet file to DICOM information
-        nnunet_dataset_file_map[str(nnunet_image_path)] = str(original_image_series_path)
+        nnunet_dataset_file_map[str(nnunet_image_path)] = str(smoothed_image_series_path)
         reverse_nnunet_dataset_file_map[str(original_image_series_path)] = str(nnunet_image_path)
         create_annotation_region_of_interest(
             mask_path=roi_mask_file,
-            ct_scan_path=original_image_series_path,
+            ct_scan_path=smoothed_image_series_path,
             annotation_path=original_annotation_path,
             output_path=nnunet_label_path,
             window=(0, 300)
         )
         create_region_of_interest(
             mask_path=roi_mask_file,
-            ct_scan_path=original_image_series_path,
+            ct_scan_path=smoothed_image_series_path,
             output_path=nnunet_windowed_image_path,
             window=(0, 300),
-            original_ct_scan_path=original_image_series_path
+            original_ct_scan_path=smoothed_image_series_path
         )
-        shutil.copy(roi_image_series_path, nnunet_image_path)
+        create_region_of_interest(
+            mask_path=roi_mask_file,
+            ct_scan_path=smoothed_image_series_path,
+            output_path=nnunet_image_path,
+            window=DEFAULT_CT_RANGE,
+            original_ct_scan_path=smoothed_image_series_path
+        )
+#        shutil.copy(roi_image_series_path, nnunet_image_path)
 
     with open(from_nnunet_mapping, 'w') as file:
         json.dump(nnunet_dataset_file_map, file)
