@@ -299,19 +299,19 @@ class RotterdamTraumaDatasetStructure(DatasetStructure):
         image_series = sorted(image_series)
         return image_series
 
-    @classmethod
-    def choose_nifti_file(cls, df):
-        """
-        Don't choose corrected file because resampling for the annotations failed in some instances...
-        """
-        if len(df) == 1:
-            return df
-
-        drop_files = []
-
-        for index, row in df.iterrows():
-            if 'Tilt_1' in row['nifti_file'] or 'Eq_1' in row['nifti_file'] or 'Tilt_Eq_1' in row['nifti_file']:
-                drop_files.append(row['nifti_file'])
-
-        cleaned = df.loc[df['nifti_file'].apply(lambda x: x not in drop_files)]
-        return cleaned
+    # @classmethod
+    # def choose_nifti_file(cls, df):
+    #     """
+    #     Don't choose corrected file because resampling for the annotations failed in some instances...
+    #     """
+    #     if len(df) == 1:
+    #         return df
+    #
+    #     drop_files = []
+    #
+    #     for index, row in df.iterrows():
+    #         if 'Tilt_1' in row['nifti_file'] or 'Eq_1' in row['nifti_file'] or 'Tilt_Eq_1' in row['nifti_file']:
+    #             drop_files.append(row['nifti_file'])
+    #
+    #     cleaned = df.loc[df['nifti_file'].apply(lambda x: x not in drop_files)]
+    #     return cleaned
