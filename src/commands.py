@@ -240,7 +240,7 @@ def control_superimposed_series(
 
 @click.command()
 @click.option('--base_path', required=True, type=click.Path(path_type=Path))
-@click.option('--distinguish_left_right', required=False, default=False, type=click.Path(path_type=Path))
+@click.option('--distinguish_left_right', required=False, default=False, type=click.BOOL,)
 def create_image_series_roi_masks(
         base_path: Path,
         distinguish_left_right: bool
@@ -250,7 +250,7 @@ def create_image_series_roi_masks(
 
 @click.command()
 @click.option('--base_path', required=True, type=click.Path(path_type=Path))
-@click.option('--distinguish_left_right', required=False, default=False, type=click.Path(path_type=Path))
+@click.option('--distinguish_left_right', required=False, default=False, type=click.BOOL,)
 def create_rois(
         base_path: Path,
         distinguish_left_right: bool
